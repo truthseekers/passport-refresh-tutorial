@@ -64,7 +64,11 @@ const AuthProvider = (props) => {
             asyncRefreshResponse.data.accessToken
           );
           localStorage.setItem("isRefresh", false);
-        } catch (error) {}
+        } catch (error) {
+          console.log(
+            "refresh token is probably expired. You need to log in again."
+          );
+        }
       } else {
         console.log("isRefresh NOT set to true");
       }
@@ -85,7 +89,7 @@ const AuthProvider = (props) => {
   useEffect(() => {
     fetchCurrentUser();
     return () => {};
-  }, [setLocalStorage]);
+  }, []);
 
   const value = {
     logout,
