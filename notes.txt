@@ -1,1 +1,7 @@
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+
+things to fix:
+
+- Custom callback to control the res.status sent from server. (see original passport tutorial)
+- Make sure posts display when the token refreshes.
+- don't call fetchCurrentUser on every single request. maybe a react-router thing can only call fetchCurrentUser on routes where user is needed

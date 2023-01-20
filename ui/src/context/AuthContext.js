@@ -36,7 +36,6 @@ const AuthProvider = (props) => {
           },
         }
       );
-      console.log("fetchCurrentUser results: ", asyncResponse);
     } catch (error) {
       console.log("ERROR in fetchCurrentUser: (401?) ", error); // should be 401?
       localStorage.setItem("isRefresh", true);
