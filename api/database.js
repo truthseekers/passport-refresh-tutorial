@@ -14,18 +14,18 @@ const publicPosts = [
 const privatePosts = [
   {
     id: "3",
-    title: "Post 3",
-    content: "Post 3 is private",
+    title: "How to wrap a burrito",
+    content: "Roll it up from one side to the other.",
   },
   {
     id: "4",
-    title: "Post 3",
-    content: "Post 3 is private",
+    title: "How to shave a cat",
+    content: "Plug razor into wall and start shaving",
   },
   {
     id: "5",
-    title: "Post 3",
-    content: "Post 3 is private",
+    title: "How to type on a keyboard",
+    content: "asdfl;kj",
   },
 ];
 module.exports = { publicPosts, privatePosts };

@@ -15,16 +15,14 @@ const PrivatePosts = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        console.log("data from posts/private in ui: ", data);
-        setPosts([]); // tmp
+        // setPosts([]); // tmp
+        setPosts(data);
       } else {
         // In the refreshtoken-tutorial-js github repo we have the ability to distinguish between a 401 and 403 error. Here we don't I think because of passport. We can do the "custom" jwt function I think, if needed... See the really long passport js tutorial on truthseekers.io I think that shows you how to do it. for now we're consolidating the 401 and 403 error into one.
-        console.log("fetchposts PROBLEM");
+        // navigate only if isRefresh is false, and the user is unauthenticated.
         // if (response.status === 401) {
-        //   console.log("fetchPosts PROBLEM A");
         //   // navigate("/login");
         // } else {
-        //   console.log("fetchPosts PROBLEM B");
         // }
       }
     });
@@ -38,6 +36,14 @@ const PrivatePosts = () => {
     <div>
       <NavBar />
       PrivatePosts
+      {posts.map((post) => {
+        return (
+          <div key={post.id} style={{ background: "cyan", margin: "15px" }}>
+            <h2>{post.title}</h2>
+            <p>{post.content}</p>
+          </div>
+        );
+      })}
     </div>
   );
 };

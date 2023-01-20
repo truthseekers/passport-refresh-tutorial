@@ -253,7 +253,6 @@ app.post(
         return user.email === maybeUser.email;
       });
 
-      console.log("creating refresh token...");
       const refreshToken = await jwt.sign(
         { email: user.email },
         process.env.REFRESH_TOKEN_SECRET,
@@ -324,50 +323,31 @@ app.get("/me", async (req, res, next) => {
 });
 
 app.get("/token", async (req, res) => {
-  console.log("token 1");
   const refreshToken = req.headers["authorization"].split("Bearer ")[1];
-  console.log("token 2");
   try {
-    console.log(
-      "token 3.. refreshToken: ",
-      refreshToken,
-      "secret: ",
-      process.env.REFRESH_TOKEN_SECRET
-    );
     /////////////////////////// refreshToken isn't passing verification. Need to find out why.
     const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    console.log("token 4");
 
     const { email } = payload;
-    console.log("token 5");
 
     const theUser = users.find((user) => user.email == email);
-    console.log("token 6");
 
     const refreshTokensMatch = theUser.refreshToken == refreshToken;
     const body = { _id: theUser.id, email: theUser.email };
-    console.log("token 7");
 
     if (refreshTokensMatch) {
-      console.log("token 8");
       const accessToken = await jwt.sign(
         // { email },
         { user: body },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "30s" }
       );
-      console.log("token 9");
       return res.json({ accessToken });
     } else {
-      console.log("token 10");
       return { msg: "Tokens dont match. yo" };
     }
-  } catch (error) {
-    console.log("token 11");
-    console.log("Error in the /token route");
-  }
+  } catch (error) {}
 
-  console.log("token 12");
   return res.send("attempted to grab the refresh token.");
 });
 
