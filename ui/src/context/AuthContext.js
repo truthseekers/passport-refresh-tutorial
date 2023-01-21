@@ -20,9 +20,31 @@ const AuthProvider = (props) => {
   const navigate = useNavigate();
   // const fetchCurrentUser = async () => {}
 
-  // const [accessToken, setAccessToken] = useState(
-  //   localStorage.getItem("accessToken")
-  // );
+  //I'm not actually using accessToken so it doesn't feel right to use state just to re-render on token changes.
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken")
+  );
+  const [refreshToken, setRefreshToken] = useState(
+    localStorage.getItem("refreshToken")
+  );
+  const [isRefresh, setIsRefresh] = useState(localStorage.getItem("isRefresh"));
+
+  const signup = async (email, password) => {
+    try {
+      const asyncResponse = await axios.post(
+        process.env.REACT_APP_API_ENDPOINT + "signup",
+        { email, password },
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (asyncResponse.status === 200) {
+        localStorage.setItem("accessToken", asyncResponse.data.accessToken);
+        navigate("/privateposts");
+      }
+    } catch (error) {}
+  };
 
   const login = async (email, password) => {
     try {
@@ -37,6 +59,10 @@ const AuthProvider = (props) => {
       if (asyncResponse.status === 200) {
         localStorage.setItem("accessToken", asyncResponse.data.accessToken);
         localStorage.setItem("refreshToken", asyncResponse.data.refreshToken);
+        setAccessToken(asyncResponse.data.accessToken);
+        setRefreshToken(asyncResponse.data.refreshToken);
+        console.log("setAccessToken");
+        console.log("setRefreshToken");
         navigate("/privateposts");
       }
     } catch (error) {}
@@ -57,6 +83,8 @@ const AuthProvider = (props) => {
     } catch (error) {
       console.log("ERROR in fetchCurrentUser: (401?) ", error); // should be 401?
       localStorage.setItem("isRefresh", true);
+      setIsRefresh(true);
+      console.log("set refresh...******");
       if (localStorage.getItem("isRefresh")) {
         console.log("isRefresh set to true");
         try {
@@ -82,6 +110,9 @@ const AuthProvider = (props) => {
             asyncRefreshResponse.data.accessToken
           );
           localStorage.setItem("isRefresh", false);
+          setAccessToken(asyncRefreshResponse.data.accessToken);
+          setIsRefresh(false);
+          console.log("Done with re-authenticating???");
         } catch (error) {
           console.log(
             "refresh token is probably expired. You need to log in again."
@@ -111,8 +142,10 @@ const AuthProvider = (props) => {
 
   const value = {
     logout,
+    accessToken,
     login,
     setLocalStorage,
+    signup,
   };
 
   return (

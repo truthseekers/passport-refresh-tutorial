@@ -1,10 +1,14 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import { useAuth } from "./context/AuthContext";
 const PrivatePosts = () => {
+  const { accessToken } = useAuth();
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  console.log("privatePosts top");
   const fetchPosts = useCallback(() => {
+    console.log("inside fetchPosts.");
     fetch(process.env.REACT_APP_API_ENDPOINT + "posts/private", {
       method: "GET",
       credentials: "include",
@@ -30,7 +34,7 @@ const PrivatePosts = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [fetchPosts]);
+  }, [fetchPosts, accessToken]);
 
   return (
     <div>

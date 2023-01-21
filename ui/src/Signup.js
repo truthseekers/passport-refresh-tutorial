@@ -2,28 +2,17 @@ import axios from "axios";
 import React, { useState } from "react";
 import NavBar from "./NavBar";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const { signup } = useAuth();
   const formSubmitHandler = async (e) => {
     e.preventDefault();
 
-    try {
-      const asyncResponse = await axios.post(
-        process.env.REACT_APP_API_ENDPOINT + "signup",
-        { email, password },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (asyncResponse.status === 200) {
-        localStorage.setItem("accessToken", asyncResponse.data.accessToken);
-        navigate("/privateposts");
-      }
-    } catch (error) {}
+    signup(email, password);
   };
 
   return (
