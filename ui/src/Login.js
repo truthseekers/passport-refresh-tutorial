@@ -1,31 +1,18 @@
 import React, { useState } from "react";
 import NavBar from "./NavBar";
-import axios from "axios";
+import { useAuth } from "./context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("email");
   const [password, setPassword] = useState("password");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const formSubmitHandler = async (e) => {
     e.preventDefault();
 
-    try {
-      const asyncResponse = await axios.post(
-        process.env.REACT_APP_API_ENDPOINT + "login",
-        { email, password },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (asyncResponse.status === 200) {
-        localStorage.setItem("accessToken", asyncResponse.data.accessToken);
-        localStorage.setItem("refreshToken", asyncResponse.data.refreshToken);
-        navigate("/privateposts");
-      }
-    } catch (error) {}
+    login(email, password);
   };
 
   return (

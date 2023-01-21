@@ -24,6 +24,24 @@ const AuthProvider = (props) => {
   //   localStorage.getItem("accessToken")
   // );
 
+  const login = async (email, password) => {
+    try {
+      const asyncResponse = await axios.post(
+        process.env.REACT_APP_API_ENDPOINT + "login",
+        { email, password },
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (asyncResponse.status === 200) {
+        localStorage.setItem("accessToken", asyncResponse.data.accessToken);
+        localStorage.setItem("refreshToken", asyncResponse.data.refreshToken);
+        navigate("/privateposts");
+      }
+    } catch (error) {}
+  };
+
   const fetchCurrentUser = async () => {
     try {
       const asyncResponse = await axios.get(
@@ -93,6 +111,7 @@ const AuthProvider = (props) => {
 
   const value = {
     logout,
+    login,
     setLocalStorage,
   };
 
